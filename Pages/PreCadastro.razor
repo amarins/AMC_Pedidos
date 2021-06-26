@@ -1,0 +1,41 @@
+﻿@layout LayoutVazio
+@page "/PreCadastro/{ticket}"
+@inject HttpClient Http
+
+@if (consultando)
+{
+    <h1>aguardando consulta> @Ticket</h1>
+}
+else
+{
+    @if (ticketResponse.Executado)
+    {
+        <FormPreCadastro Ticket="@ticketResponse.Ticket" />
+    }
+    else
+    {
+        <h1>@ticketResponse.Menssagem</h1>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public string Ticket { get; set; }
+
+    public bool consultando;
+
+    public TicketResponse ticketResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        consultando = true;
+
+        var url = $"https://localhost:44312/api/Ticket/GetValidarTicket/{Ticket}";
+
+        ticketResponse = await Http.GetFromJsonAsync<TicketResponse>(url);
+
+        consultando = false;
+    }
+
+}

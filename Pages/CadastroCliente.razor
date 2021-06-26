@@ -1,0 +1,184 @@
+﻿@page  "/CadastroCliente"
+
+@using Newtonsoft.Json;
+@using BaseBlazorAdmin.Data;
+
+
+
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Cadastro de Novo Investidor</MudText>
+
+@if (ticketValido)
+{
+    <span>TICKET VALIDO, PODE MOSTRAR OS DADOS PARA CADASTRO</span>
+}
+else
+{ 
+    <h1>ESTE TICKET NAO É MAIS VÁLIDO, PEDIR OUTRO TICKET AO SEU CONSULTOR</h1>
+}
+
+<MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
+        📝 DADOS PARA O CONTRATO DE TERCEIRIZAÇÃO 📝
+    </MudText>
+    <MudGrid Spacing="6" Class="mt-16">
+        <MudItem xs="7">
+            <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">Dados Pessoais</MudText>
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField T="string" Label="Nome do Cliente Completo" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField T="string" Label="Data de Nascimento" />
+                </MudItem>
+                <MudGrid>
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudAutocomplete T="string" Label="Nacionalidade" @bind-Value="value1" SearchFunc="@Search1"
+                                         ResetValueOnEmptyText="@resetValueOnEmptyText"
+                                         CoerceText="@coerceText" CoerceValue="@coerceValue" />
+                    </MudItem>
+                </MudGrid>
+                @code {
+                    private bool resetValueOnEmptyText;
+                    private bool coerceText;
+                    private bool coerceValue;
+                    private string value1, value2;
+                    private string[] states =
+                    {"Brasil"
+                    };
+
+                    private async Task<IEnumerable<string>> Search1(string value)
+                    {
+                        // In real life use an asynchronous function for fetching data from an api.
+                        await Task.Delay(5);
+
+                        // if text is null or empty, show complete list
+                        if (string.IsNullOrEmpty(value))
+                            return states;
+                        return states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+                    }
+
+                    private async Task<IEnumerable<string>> Search2(string value)
+                    {
+                        // In real life use an asynchronous function for fetching data from an api.
+                        await Task.Delay(5);
+
+                        // if text is null or empty, don't return values (drop-down will not open)
+                        if (string.IsNullOrEmpty(value))
+                            return new string[0];
+                        return states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                }
+                <MudItem xs="12">
+                    <MudTextField T="string" Label="Profissão" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField T="string" Label="RG N°" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField T="string" Label="Orgão Emissor" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField T="string" Label="CPF" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudExpansionPanels>
+                        <MudExpansionPanel Text="Estado Civil">
+                            Solteiro
+                            Casado
+                            Amasiado
+                        </MudExpansionPanel>
+                    </MudExpansionPanels>
+                </MudItem>
+
+                    <MudItem xs="6" Class="d-flex justify-left">
+                        <MudButton Variant="Variant.Filled" @onclick="GetCepInformacoes" DisableElevation="true" Color="Color.Primary"
+                                   Size="Size.Large" Class="mt-8">
+                            Buscar CEP
+                        </MudButton>
+                        <MudItem xs="6">
+                            <MudTextField T="string" Label="CEP" @bind-Value="InfoCep" />
+                        </MudItem>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="string" Label="Rua" @bind-Value="informacoesCep.street" />
+
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" Label="Numero" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" Label="Complemento" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" @bind-Value="informacoesCep.neighborhood" Label="Bairro" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" @bind-Value="informacoesCep.City" Label="Cidade" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" @bind-Value="informacoesCep.state" Label="UF" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" Label="Telefone" />
+                    </MudItem>
+
+                    <MudItem xs="12" Class="d-flex justify-center">
+                        <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary"
+                                   Size="Size.Large" Class="mt-8">Cadastrar ou Alterar</MudButton>
+                    </MudItem>
+            </MudGrid>
+        </MudItem>
+
+    </MudGrid>
+    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Navigation" IconColor="Color.Success">Home</MudNavLink>
+    
+
+</MudContainer>
+
+
+@code{
+
+    Endereco informacoesCep = new Endereco();
+    List<string> listaDeCeps = new List<string>();
+    string InfoCep;
+
+    public bool ticketValido { get; set; } = true;
+
+    protected override void OnInitialized()
+    {
+        //Verificar o ticket que esta na url
+        //Jogar dentro de uma variavel
+        //Validar Ticket
+
+    }
+
+    private async void GetCepInformacoes()
+    {
+
+        //string url = "https://viacep.com.br/ws/" + informacoesCep.Cep + "/json";
+
+        string url = "https://brasilapi.com.br/api/cep/v1/{" + InfoCep + "}";
+
+        using (var cliente = new HttpClient())
+        {
+            HttpResponseMessage resposta = await cliente.GetAsync(url);
+            string json = await resposta.Content.ReadAsStringAsync();
+            informacoesCep = JsonConvert.DeserializeObject<Endereco>(json);
+
+            //   informacoesCep.Cep = informacoesCep.Cep.Replace("-", "");
+            //    listaDeCeps.Add(informacoesCep.Cep);
+
+        }
+    }
+
+    private void CleanList()
+    {
+        informacoesCep.Cep = string.Empty;
+        informacoesCep.neighborhood = string.Empty;
+        informacoesCep.City = string.Empty;
+        informacoesCep.street = string.Empty;
+        informacoesCep.state = string.Empty;
+        listaDeCeps.Clear();
+    }
+}
