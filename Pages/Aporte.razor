@@ -1,5 +1,109 @@
-﻿<h3>Aporte</h3>
+﻿@page "/Aporte"
 
-@code {
+@using Newtonsoft.Json;
+@using BaseBlazorAdmin.Data;
+@inject HttpClient http
+@inject IJSRuntime js
+
+@inject ISnackbar Snackbar
+
+
+<center>
+    <div style="max-width:95%; align-content:center">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <MudCard>
+            <MudCardHeader>Ticket</MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
+                    Enviar Ticket Para Novo Cliente
+                </MudText>
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudAutocomplete T="string" Label="Nome do Investidor" SearchFunc="@Search2"
+                                         ResetValueOnEmptyText="@resetValueOnEmptyText"
+                                         oerceText="@coerceText" CoerceValue="@coerceValue"
+                                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudDatePicker Label="Data Deposito" @bind-Date="date" HelperText="Data do Deposito" DateFormat="dd/MM/yyyy" />
+                    </MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField T="string" Label="Telefone" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="string" Label="E-Mail" Variant="Variant.Outlined" />
+                    </MudItem>
+                </MudGrid>
+                <br />
+                <MudGrid>
+                    <InputFile id="fileInput112" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+
+                    <MudButton HtmlTag="label"
+                     Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    StartIcon="@Icons.Filled.CloudUpload"
+                    for="fileInput112">Upload your images
+                    </MudButton>
+
+                </MudGrid>
+
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Enviar</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+
+    </div>
+</center>
+
+@code{
+
+    //Data Picker - DT Validade -------
+    @code {
+        MudDatePicker _picker;
+        DateTime? date = DateTime.Today;
+        private bool autoClose;
+        private bool readOnly;
+    }
+
+    // FIM Data Picker - DT Validade -------
+
+    private bool resetValueOnEmptyText;
+    private bool coerceText;
+    private bool coerceValue;
+    private string value1, value2;
+    private string[] nome = null;
+
+    private async Task<IEnumerable<string>> Search2(string value)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return nome.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    //Tratar imagem upload
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        var entries = e.GetMultipleFiles();
+        //Do your validations here
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add($"Files with {entries.FirstOrDefault().Size} bytes size are not allowed", Severity.Error);
+        Snackbar.Add($"Files starting with letter {entries.FirstOrDefault().Name.Substring(0, 1)} are not recommended", Severity.Warning);
+        Snackbar.Add($"This file has the extension {entries.FirstOrDefault().Name.Split(".").Last()}", Severity.Info);
+
+        //TODO upload the files to the server
+    }
+
+    // FIM Tratar imagem upload
 
 }

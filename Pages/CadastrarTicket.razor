@@ -6,43 +6,41 @@
 
 <center>
     <div style="max-width:95%; align-content:center">
-        <EditForm Model="@clienteView" OnValidSubmit="@Salvar">
-            <DataAnnotationsValidator />
+                   <DataAnnotationsValidator />
             <ValidationSummary />
 
             <MudCard>
                 <MudCardHeader>Ticket</MudCardHeader>
                 <MudCardContent>
                     <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
-                        Enviar ticket Para novo cliente
+                        Enviar Ticket Para Novo Cliente
                     </MudText>
 
-                    <MudText Typo="Typo.h5" Align="Align.Left">Dados Pessoais</MudText>
 
                     <MudGrid>
                         <MudItem xs="8">
-                            <MudTextField T="string" @bind-Value="clienteView.Nome" Label="Nome completo" Variant="Variant.Outlined" />
+                            <MudTextField T="string" Label="Nome completo" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="4">
-                            <MudTextField T="DateTime" Variant="Variant.Outlined" @bind-Value="clienteView.DT_Nasc" Label="Data Validade" />
+                            <MudDatePicker Label="Data Validade" @bind-Date="date" HelperText="Data maxima de envio do Cadastro" DateFormat="dd/MM/yyyy" />
                         </MudItem>
                     </MudGrid>
                     <MudGrid>
                         <MudItem xs="6">
-                            <MudTextField T="string" Label="Telefone" @bind-Value="clienteView.Telefone" Variant="Variant.Outlined" />
+                            <MudTextField T="string" Label="Telefone" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="6">
-                            <MudTextField T="string" Label="E-Mail" @bind-Value="clienteView.email" Variant="Variant.Outlined" />
+                            <MudTextField T="string" Label="E-Mail" Variant="Variant.Outlined" />
                         </MudItem>
                     </MudGrid>
-                 
+
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Enviar</MudButton>
                 </MudCardActions>
             </MudCard>
 
-        </EditForm>
+       
     </div>
 </center>
 
@@ -52,190 +50,13 @@
 
 @code{
 
-    [Parameter]
-    public Ticket Ticket { get; set; }
-
-    public ClienteView clienteView { get; set; } = new ClienteView();
-
-    public bool ticketValido { get; set; } = true;
-
-    protected override void OnInitialized()
-    {
-        //Verificar o ticket que esta na url
-        //Jogar dentro de uma variavel
-        //Validar Ticket
-
+    //Data Picker - DT Validade -------
+    @code {
+        MudDatePicker _picker;
+        DateTime? date = DateTime.Today;
+        private bool autoClose;
+        private bool readOnly;
     }
 
-    private async Task Salvar()
-    {
-        var url = "https://localhost:44312/api/cliente/PostIncluircomTicket";
-        var ClienteInput = new TESTE();
-        ClienteInput.Ticket = Ticket.id.ToString();
-        ClienteInput.Cliente = clienteView;
-
-        var retorno = await http.PostAsJsonAsync(url, ClienteInput);
-
-        if (retorno.IsSuccessStatusCode)
-        {
-            var ret = await retorno.Content.ReadAsAsync<bool>();
-            if (ret)
-            { //Cadastro feito com successo
-                await js.InvokeVoidAsync("alert", "Funcionou bem!");
-            }
-            else
-            {
-                // Deu merda
-                await js.InvokeVoidAsync("alert", "Deu ruim!");
-            }
-        }
-    }
-
-    //auto complite diversos---------------------------------------------
-    private bool resetValueOnEmptyText;
-    private bool coerceText;
-    private bool coerceValue;
-    private string value1, value2;
-
-    private string[] Nacionalidade =
-    {"Brasil",
-     "Portugal",
-     "Estados Unidos"
-    };
-
-    private bool coerceText1;
-    private bool coerceValue1;
-    private string value3, value4;
-    private string[] EstadoCivil =
-    {"Solteiro",
-     "Casado",
-     "Viuvo",
-     "Divorciado"
-    };
-
-    private bool coerceText2;
-    private bool coerceValue2;
-    private string value5, value6;
-    private string[] RegimeBens =
-    {"Comunhão total de Bens",
-     "Comunhão Parcial de Bens",
-     "Separação de Bens"
-    };
-
-
-    private async Task<IEnumerable<string>> Search2(string value)
-    {
-        // In real life use an asynchronous function for fetching data from an api.
-        await Task.Delay(5);
-
-        // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
-            return new string[0];
-        return Nacionalidade.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    }
-    private async Task<IEnumerable<string>> Search3(string value)
-    {
-        // In real life use an asynchronous function for fetching data from an api.
-        await Task.Delay(5);
-
-        // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
-            return new string[0];
-        return RegimeBens.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    }
-    private async Task<IEnumerable<string>> Search4(string value)
-    {
-        // In real life use an asynchronous function for fetching data from an api.
-        await Task.Delay(5);
-
-        // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
-            return new string[0];
-        return EstadoCivil.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    }
-
-    // FIM auto complite diversos---------------------------------------------
-
-    //API Busca CEP ------------------------------------------------------------------------
-
-    Endereco informacoesCep = new Endereco();
-    List<string> listaDeCeps = new List<string>();
-    string InfoCep;
-
-    private async void GetCepInformacoes()
-    {
-        string url = "https://brasilapi.com.br/api/cep/v1/{" + InfoCep + "}";
-
-        using (var cep = new HttpClient())
-        {
-            HttpResponseMessage resposta = await cep.GetAsync(url);
-            string json = await resposta.Content.ReadAsStringAsync();
-            informacoesCep = JsonConvert.DeserializeObject<Endereco>(json);
-        }
-    }
-
-    // FIM API Busca CEP ------------------------------------------------------------------------
-
-
-    //API Busca Bancos ------------------------------------------------------------------------
-    Bancos informacoesBancos = new Bancos();
-    List<string> listaDeBancos = new List<string>();
-    string InfoBanco;
-
-    private async void GetBancos()
-    {
-
-        string url = "https://brasilapi.com.br/api/banks/v1/{0" + InfoBanco + "}";
-
-        using (var bancos = new HttpClient())
-        {
-            HttpResponseMessage resposta = await bancos.GetAsync(url);
-            string json = await resposta.Content.ReadAsStringAsync();
-            informacoesBancos = JsonConvert.DeserializeObject<Bancos>(json);
-        }
-    }
-
-    //FIM API Busca Bancos ------------------------------------------------------------------------
-
-    //Checkbox ---------------------------------------------------
-    public string SelectedTipoConta { get; set; }
-
-
-    private void Reset()
-    {
-        SelectedTipoConta = null;
-    }
-
-
-    public string SelectedTipoContrato { get; set; }
-
-    private void Reset1()
-    {
-        SelectedTipoContrato = null;
-    }
-    public string SelectedPraoContrato { get; set; }
-
-    private void Reset2()
-    {
-        SelectedPraoContrato = null;
-    }
-    // upload de fotos
-
-    IList<IBrowserFile> files = new List<IBrowserFile>();
-    private void UploadFiles(InputFileChangeEventArgs e)
-    {
-        foreach (var file in e.GetMultipleFiles())
-        {
-            files.Add(file);
-        }
-        //TODO upload the files to the server
-    }
-
-
-    public class TESTE
-    {
-        public string Ticket { get; set; }
-        public ClienteView Cliente { get; set; }
-    }
-
+    // FIM Data Picker - DT Validade -------
 }
