@@ -1,147 +1,191 @@
 ﻿@page  "/CadastroCliente"
-
 @using Newtonsoft.Json;
 @using BaseBlazorAdmin.Data;
+@inject HttpClient http
+@inject IJSRuntime js
 
+<center>
+    <div style="max-width:95%; align-content:center">
+        <EditForm Model="@clienteView" OnValidSubmit="@Salvar">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
+            <MudCard>
+                <MudCardHeader>Pré-Cadastro</MudCardHeader>
+                <MudCardContent>
+                    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
+                        DADOS PARA O CONTRATO DE TERCEIRIZAÇÃO
+                    </MudText>
 
+                    <MudText Typo="Typo.h5" Align="Align.Left">Dados Pessoais</MudText>
 
-<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Cadastro de Novo Investidor</MudText>
-
-@if (ticketValido)
-{
-    <span>TICKET VALIDO, PODE MOSTRAR OS DADOS PARA CADASTRO</span>
-}
-else
-{ 
-    <h1>ESTE TICKET NAO É MAIS VÁLIDO, PEDIR OUTRO TICKET AO SEU CONSULTOR</h1>
-}
-
-<MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
-    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
-        📝 DADOS PARA O CONTRATO DE TERCEIRIZAÇÃO 📝
-    </MudText>
-    <MudGrid Spacing="6" Class="mt-16">
-        <MudItem xs="7">
-            <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">Dados Pessoais</MudText>
-            <MudGrid>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Nome do Cliente Completo" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Data de Nascimento" />
-                </MudItem>
-                <MudGrid>
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudAutocomplete T="string" Label="Nacionalidade" @bind-Value="value1" SearchFunc="@Search1"
-                                         ResetValueOnEmptyText="@resetValueOnEmptyText"
-                                         CoerceText="@coerceText" CoerceValue="@coerceValue" />
-                    </MudItem>
-                </MudGrid>
-                @code {
-                    private bool resetValueOnEmptyText;
-                    private bool coerceText;
-                    private bool coerceValue;
-                    private string value1, value2;
-                    private string[] states =
-                    {"Brasil"
-                    };
-
-                    private async Task<IEnumerable<string>> Search1(string value)
-                    {
-                        // In real life use an asynchronous function for fetching data from an api.
-                        await Task.Delay(5);
-
-                        // if text is null or empty, show complete list
-                        if (string.IsNullOrEmpty(value))
-                            return states;
-                        return states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-                    }
-
-                    private async Task<IEnumerable<string>> Search2(string value)
-                    {
-                        // In real life use an asynchronous function for fetching data from an api.
-                        await Task.Delay(5);
-
-                        // if text is null or empty, don't return values (drop-down will not open)
-                        if (string.IsNullOrEmpty(value))
-                            return new string[0];
-                        return states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-                    }
-                }
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="Profissão" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudTextField T="string" Label="RG N°" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudTextField T="string" Label="Orgão Emissor" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField T="string" Label="CPF" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudExpansionPanels>
-                        <MudExpansionPanel Text="Estado Civil">
-                            Solteiro
-                            Casado
-                            Amasiado
-                        </MudExpansionPanel>
-                    </MudExpansionPanels>
-                </MudItem>
-
-                    <MudItem xs="6" Class="d-flex justify-left">
-                        <MudButton Variant="Variant.Filled" @onclick="GetCepInformacoes" DisableElevation="true" Color="Color.Primary"
-                                   Size="Size.Large" Class="mt-8">
-                            Buscar CEP
-                        </MudButton>
-                        <MudItem xs="6">
-                            <MudTextField T="string" Label="CEP" @bind-Value="InfoCep" />
+                    <MudGrid>
+                        <MudItem xs="8">
+                            <MudTextField T="string" @bind-Value="clienteView.Nome" Label="Nome completo" Variant="Variant.Outlined" />
                         </MudItem>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudTextField T="string" Label="Rua" @bind-Value="informacoesCep.street" />
+                        <MudItem xs="4">
+                            <MudTextField T="DateTime" Variant="Variant.Outlined" @bind-Value="clienteView.DT_Nasc" Label="Data de Nascimento" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudTextField T="string" Label="Telefone" @bind-Value="clienteView.Telefone" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField T="string" Label="E-Mail" @bind-Value="clienteView.email" Variant="Variant.Outlined" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Label="CPF/CNPJ" @bind-Value="clienteView.CPF_CNPJ" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="clienteView.RG" Label="RG" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="clienteView.RG_Orgao_Emissor" Label="Orgão Emissor" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="3">
+                            <MudTextField T="string" Label="Profissão" @bind-Value="clienteView.Profissao" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6" md="3">
+                            <MudAutocomplete T="string" Label="Nacionalidade" @bind-Value="clienteView.Nacionalidade" SearchFunc="@Search2"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
+                                             CoerceText="@coerceText" CoerceValue="@coerceValue"
+                                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                        </MudItem>
+                        <MudItem xs="4" sm="6" md="3">
+                            <MudAutocomplete T="string" Label="Estado Civil" @bind-Value="clienteView.Estado_Civil" SearchFunc="@Search4"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
+                                             CoerceText="@coerceText1" CoerceValue="@coerceValue1"
+                                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                        </MudItem>
+                        <MudItem xs="4" sm="6" md="3">
+                            <MudAutocomplete T="string" Label="Regime de Bens" @bind-Value="clienteView.Regime_de_Bens" SearchFunc="@Search3"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
+                                             CoerceText="@coerceText2" CoerceValue="@coerceValue2"
+                                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                        </MudItem>
+                    </MudGrid>
+                    <br />
+                    <MudText Typo="Typo.h5" Align="Align.Left">Endereço Residencial</MudText>
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" @onmouseover="GetCepInformacoes" Label="CEP" @bind-Value="clienteView.Endereco_CEP" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" Label="Rua" @bind-Value="clienteView.Endereco_Rua" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" Label="Numero" @bind-Value="clienteView.Endereco_Numero" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" Label="Complemento" @bind-Value="clienteView.Endereco_Complemento" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Bairro" Variant="Variant.Outlined" Label="Bairro" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Cidade" Variant="Variant.Outlined" Label="Cidade" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Estado" Label="UF" Variant="Variant.Outlined" />
+                        </MudItem>
+                    </MudGrid>
+                    <br />
+                    <MudText Typo="Typo.h5" Align="Align.Left">Informações Bancárias</MudText>
+                    <MudGrid>
+                        <MudItem xs="2">
+                            <MudTextField T="string" @bind-Value="clienteView.CodBanco" Variant="Variant.Outlined" @onmouseover="GetBancos" Label="Codigo do Banco" />
+                        </MudItem>
 
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField T="string" Label="Numero" />
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField T="string" Label="Complemento" />
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField T="string" @bind-Value="informacoesCep.neighborhood" Label="Bairro" />
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField T="string" @bind-Value="informacoesCep.City" Label="Cidade" />
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField T="string" @bind-Value="informacoesCep.state" Label="UF" />
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudTextField T="string" Label="Telefone" />
-                    </MudItem>
+                        <MudItem xs="2">
+                            <MudTextField T="string" @bind-Value="informacoesBancos.fullName" Variant="Variant.Outlined" Label="Banco" />
+                        </MudItem>
+                        <MudItem xs="2">
+                            <MudTextField T="string" Variant="Variant.Outlined" Label="Agencia" @bind-Value="clienteView.CodAgencia" />
+                        </MudItem>
+                        <MudItem xs="2">
+                            <MudTextField T="string" Variant="Variant.Outlined" Label="Numero da Conta" @bind-Value="clienteView.NumConta" />
+                        </MudItem>
+                        <MudRadioGroup @bind-SelectedOption="@SelectedTipoConta" @bind-value="@clienteView.TipoConta">
+                            <MudRadio Option="@("1")" Color="Color.Primary">Conta Corrente</MudRadio>
+                            <MudRadio Option="@("2")" Color="Color.Primary">Conta Poupança </MudRadio>
+                        </MudRadioGroup>
+                    </MudGrid>
 
-                    <MudItem xs="12" Class="d-flex justify-center">
-                        <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary"
-                                   Size="Size.Large" Class="mt-8">Cadastrar ou Alterar</MudButton>
-                    </MudItem>
-            </MudGrid>
-        </MudItem>
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="clienteView.NomeFavorecido" Label="Nome do Favorecido da Conta" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="clienteView.CPFFavorecido" Label="CPF ou CNPJ do Favorecido da Conta" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudNumericField T="double" Variant="Variant.Outlined" @bind-Value="clienteView.ValorContrato" Label="Valor do Contrato" Adornment="Adornment.Start" AdornmentText="R$" AdornmentColor="Color.Success" HideSpinButtons="true" Format="##,#0.00" />
+                        </MudItem>
 
-    </MudGrid>
-    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Navigation" IconColor="Color.Success">Home</MudNavLink>
-    
+                    </MudGrid>
+                    <br />
+                    <MudText Typo="Typo.h5" Align="Align.Left">Informações do Contrato</MudText>
 
-</MudContainer>
+                    <MudGrid>
+                        <MudItem xs="2">
+                            <MudText Align="Align.Center" GutterBottom="true">
+                                Prazo de Contrato
+                            </MudText>
+
+                            <MudRadioGroup @bind-SelectedOption="@clienteView.PrazoContrato" @bind-value="@clienteView.PrazoContrato">
+                                <MudRadio Option="@("1")" Color="Color.Primary">24 Meses</MudRadio>
+                                <MudRadio Option="@("2")" Color="Color.Primary">36 Meses</MudRadio>
+                            </MudRadioGroup>
+                        </MudItem>
+                        <MudItem xs="8">
+                            <MudText Align="Align.Center" GutterBottom="true">Tipo de Entrega de Contrato</MudText>
+
+                            <MudRadioGroup @bind-SelectedOption="@SelectedPraoContrato" @bind-value="@clienteView.TipoEntrega">
+                                <MudRadio Option="@("1")" Color="Color.Primary"> Contrato Cartório, Irá buscar na Consultoria</MudRadio>
+                                <MudRadio Option="@("2")" Color="Color.Primary">Contrato Cartório Enviar Correios</MudRadio>
+                                <MudRadio Option="@("3")" Color="Color.Primary">Contrato Digital</MudRadio>
+                            </MudRadioGroup>
+                        </MudItem>
+                        <MudItem xs="2">
+                            <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Filled.CloudUpload"
+                                       for="fileInput">
+                                Carregar Foto
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Enviar</MudButton>
+                </MudCardActions>
+            </MudCard>
+
+        </EditForm>
+    </div>
+</center>
+
+
+
 
 
 @code{
 
-    Endereco informacoesCep = new Endereco();
-    List<string> listaDeCeps = new List<string>();
-    string InfoCep;
+    [Parameter]
+    public Ticket Ticket { get; set; }
+
+    public ClienteView clienteView { get; set; } = new ClienteView();
 
     public bool ticketValido { get; set; } = true;
 
@@ -153,32 +197,175 @@ else
 
     }
 
-    private async void GetCepInformacoes()
+    private async Task Salvar()
     {
+        var url = "https://localhost:44312/api/cliente/PostIncluircomTicket";
+        var ClienteInput = new TESTE();
+        ClienteInput.Ticket = Ticket.id.ToString();
+        ClienteInput.Cliente = clienteView;
 
-        //string url = "https://viacep.com.br/ws/" + informacoesCep.Cep + "/json";
+        var retorno = await http.PostAsJsonAsync(url, ClienteInput);
 
-        string url = "https://brasilapi.com.br/api/cep/v1/{" + InfoCep + "}";
-
-        using (var cliente = new HttpClient())
+        if (retorno.IsSuccessStatusCode)
         {
-            HttpResponseMessage resposta = await cliente.GetAsync(url);
-            string json = await resposta.Content.ReadAsStringAsync();
-            informacoesCep = JsonConvert.DeserializeObject<Endereco>(json);
-
-            //   informacoesCep.Cep = informacoesCep.Cep.Replace("-", "");
-            //    listaDeCeps.Add(informacoesCep.Cep);
-
+            var ret = await retorno.Content.ReadAsAsync<bool>();
+            if (ret)
+            { //Cadastro feito com successo
+                await js.InvokeVoidAsync("alert", "Funcionou bem!");
+            }
+            else
+            {
+                // Deu merda
+                await js.InvokeVoidAsync("alert", "Deu ruim!");
+            }
         }
     }
 
-    private void CleanList()
+    //auto complite diversos---------------------------------------------
+    private bool resetValueOnEmptyText;
+    private bool coerceText;
+    private bool coerceValue;
+    private string value1, value2;
+
+    private string[] Nacionalidade =
+    {"Brasil",
+     "Portugal",
+     "Estados Unidos"
+    };
+
+    private bool coerceText1;
+    private bool coerceValue1;
+    private string value3, value4;
+    private string[] EstadoCivil =
+    {"Solteiro",
+     "Casado",
+     "Viuvo",
+     "Divorciado"
+    };
+
+    private bool coerceText2;
+    private bool coerceValue2;
+    private string value5, value6;
+    private string[] RegimeBens =
+    {"Comunhão total de Bens",
+     "Comunhão Parcial de Bens",
+     "Separação de Bens"
+    };
+
+
+    private async Task<IEnumerable<string>> Search2(string value)
     {
-        informacoesCep.Cep = string.Empty;
-        informacoesCep.neighborhood = string.Empty;
-        informacoesCep.City = string.Empty;
-        informacoesCep.street = string.Empty;
-        informacoesCep.state = string.Empty;
-        listaDeCeps.Clear();
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return Nacionalidade.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
+    private async Task<IEnumerable<string>> Search3(string value)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return RegimeBens.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+    private async Task<IEnumerable<string>> Search4(string value)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return EstadoCivil.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    // FIM auto complite diversos---------------------------------------------
+
+    //API Busca CEP ------------------------------------------------------------------------
+
+    Endereco informacoesCep = new Endereco();
+    List<string> listaDeCeps = new List<string>();
+    string InfoCep;
+
+    private async void GetCepInformacoes()
+    {
+        string url = "https://brasilapi.com.br/api/cep/v1/{" + InfoCep + "}";
+
+        using (var cep = new HttpClient())
+        {
+            HttpResponseMessage resposta = await cep.GetAsync(url);
+            string json = await resposta.Content.ReadAsStringAsync();
+            informacoesCep = JsonConvert.DeserializeObject<Endereco>(json);
+        }
+    }
+
+    // FIM API Busca CEP ------------------------------------------------------------------------
+
+
+    //API Busca Bancos ------------------------------------------------------------------------
+    Bancos informacoesBancos = new Bancos();
+    List<string> listaDeBancos = new List<string>();
+    string InfoBanco;
+
+    private async void GetBancos()
+    {
+
+        string url = "https://brasilapi.com.br/api/banks/v1/{0" + InfoBanco + "}";
+
+        using (var bancos = new HttpClient())
+        {
+            HttpResponseMessage resposta = await bancos.GetAsync(url);
+            string json = await resposta.Content.ReadAsStringAsync();
+            informacoesBancos = JsonConvert.DeserializeObject<Bancos>(json);
+        }
+    }
+
+    //FIM API Busca Bancos ------------------------------------------------------------------------
+
+    //Checkbox ---------------------------------------------------
+    public string SelectedTipoConta { get; set; }
+
+
+    private void Reset()
+    {
+        SelectedTipoConta = null;
+    }
+
+
+    public string SelectedTipoContrato { get; set; }
+
+    private void Reset1()
+    {
+        SelectedTipoContrato = null;
+    }
+    public string SelectedPraoContrato { get; set; }
+
+    private void Reset2()
+    {
+        SelectedPraoContrato = null;
+    }
+    // upload de fotos
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
+    }
+
+
+    public class TESTE
+    {
+        public string Ticket { get; set; }
+        public ClienteView Cliente { get; set; }
+    }
+
 }
