@@ -5,8 +5,6 @@
 @inject IJSRuntime js
 
 
-
-
 <center>
     <div style="max-width:95%; align-content:center">
         <EditForm Model="@clienteView" OnValidSubmit="@Salvar">
@@ -17,19 +15,48 @@
                 <MudCardHeader>Pré-Cadastro</MudCardHeader>
                 <MudCardContent>
                     <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">
-                       CONTRATO DE TERCEIRIZAÇÃO
+                        CONTRATO DE TERCEIRIZAÇÃO
                     </MudText>
+
+                    <MudText Typo="Typo.h5" Align="Align.Left">Clientes Ativos</MudText>
+
+                    <br />
+
+
+                    <MudSimpleTable Hover="true" Dense="true" FixedHeader="@fixedheader" Style="@(fixedheader?"height:300px;":"")">
+                        <thead>
+                            <tr>
+                                @foreach (var h in headings)
+                                {
+                                    <th>@h</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in rows)
+                            {
+                                <tr>
+                                    @foreach (var x in row.Split())
+                                    {
+                                        <td>@x</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </MudSimpleTable>
+                  
 
                     <MudText Typo="Typo.h5" Align="Align.Left">Dados Pessoais</MudText>
 
+
                     <MudGrid>
                         <MudItem xs="8">
-                         <MudAutocomplete T="string" Label="Nome do Investidor" @bind-Value="clienteView.Nome" SearchFunc="@Search2"
-                          ResetValueOnEmptyText="@resetValueOnEmptyText"
-                          CoerceText="@coerceText" CoerceValue="@coerceValue"
-                          AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
-                        </MudItem>                  
-                            
+                            <MudAutocomplete T="string" Label="Nome do Investidor" @bind-Value="clienteView.Nome" SearchFunc="@Search2"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
+                                             CoerceText="@coerceText" CoerceValue="@coerceValue"
+                                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                        </MudItem>
+
                         <MudItem xs="4">
                             <MudTextField T="DateTime" Variant="Variant.Outlined" @bind-Value="clienteView.DT_Nasc" Label="Data de Nascimento" />
                         </MudItem>
@@ -141,14 +168,14 @@
 
                     <MudGrid>
                         <MudItem xs="4">
-                          <MudTextField T="int" Variant="Variant.Outlined" Label="Duração do Contrato" @bind-Value="clienteView.PrazoContrato" />
+                            <MudTextField T="int" Variant="Variant.Outlined" Label="Duração do Contrato" @bind-Value="clienteView.PrazoContrato" />
                         </MudItem>
                         <MudItem xs="4">
                             <MudTextField T="int" Variant="Variant.Outlined" Label="Tipo Entrega" @bind-Value="clienteView.TipoEntrega" />
 
                         </MudItem>
                         <MudItem xs="4">
-                            <MudTextField T="string" Variant="Variant.Outlined"  Label="Fotos Do Documento" @bind-Value="clienteView.Foto_Doc_Identificacao" />
+                            <MudTextField T="string" Variant="Variant.Outlined" Label="Fotos Do Documento" @bind-Value="clienteView.Foto_Doc_Identificacao" />
 
                         </MudItem>
                     </MudGrid>
@@ -167,6 +194,19 @@
 
 
 @code{
+
+    //-------------------------------------------------------------------
+
+    bool fixedheader = true;
+    string[] headings = { "ID", "Name", "Email", "Sexo", "Data Contrato" };
+    string[] rows = {
+        @"1 Krishna kpartner0@usatoday.com Masculino 01/01/2020",
+        @"2 Webb wstitle1@ning.com Masculino 05/02/2020",
+        @"3 Nathanil nneal2@cyberchimps.com Masculino 10/05/2020",
+        @"4 Adara alockwood3@patch.com Feminino 11/07/2020",
+    };
+
+    //-------------------------------------------------------------------
 
     [Parameter]
     public Ticket Ticket { get; set; }

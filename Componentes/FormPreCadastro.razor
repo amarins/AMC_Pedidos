@@ -77,25 +77,27 @@
                         <MudItem xs="4">
                             <MudTextField T="string" Variant="Variant.Outlined" Label="Rua" @bind-Value="clienteView.Endereco_Rua" />
                         </MudItem>
-                    </MudGrid>
-                    <MudGrid>
                         <MudItem xs="4">
                             <MudTextField T="string" Variant="Variant.Outlined" Label="Numero" @bind-Value="clienteView.Endereco_Numero" />
                         </MudItem>
-                        <MudItem xs="4">
+                    </MudGrid>
+                    <MudGrid>
+
+                        <MudItem xs="3">
                             <MudTextField T="string" Variant="Variant.Outlined" Label="Complemento" @bind-Value="clienteView.Endereco_Complemento" />
                         </MudItem>
-                        <MudItem xs="4">
+                        <MudItem xs="3">
                             <MudTextField T="string" @bind-Value="clienteView.Endereco_Bairro" Variant="Variant.Outlined" Label="Bairro" />
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Cidade" Variant="Variant.Outlined" Label="Cidade" />
+                        </MudItem>
+                        <MudItem xs="2">
+                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Estado" Label="UF" Variant="Variant.Outlined" />
                         </MudItem>
                     </MudGrid>
                     <MudGrid>
-                        <MudItem xs="6">
-                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Cidade" Variant="Variant.Outlined" Label="Cidade" />
-                        </MudItem>
-                        <MudItem xs="6">
-                            <MudTextField T="string" @bind-Value="clienteView.Endereco_Estado" Label="UF" Variant="Variant.Outlined" />
-                        </MudItem>
+                        
                     </MudGrid>
                     <br />
                     <MudText Typo="Typo.h5" Align="Align.Left">Informações Bancárias</MudText>
@@ -140,7 +142,7 @@
                                 Prazo de Contrato
                             </MudText>
 
-                            <MudRadioGroup @bind-SelectedOption="@clienteView.PrazoContrato" @bind-value="@clienteView.PrazoContrato">
+                            <MudRadioGroup @bind-SelectedOption="@SelectedPrazoContrato" @bind-value="@clienteView.PrazoContrato">
                                 <MudRadio Option="@("1")" Color="Color.Primary">24 Meses</MudRadio>
                                 <MudRadio Option="@("2")" Color="Color.Primary">36 Meses</MudRadio>
                             </MudRadioGroup>
@@ -148,7 +150,7 @@
                         <MudItem xs="8">
                             <MudText Align="Align.Center" GutterBottom="true">Tipo de Entrega de Contrato</MudText>
 
-                            <MudRadioGroup @bind-SelectedOption="@SelectedPraoContrato"  @bind-value="@clienteView.TipoEntrega">
+                            <MudRadioGroup @bind-SelectedOption="@SelectedTipoEntrega"  @bind-value="@clienteView.TipoEntrega">
                                 <MudRadio Option="@("1")" Color="Color.Primary"> Contrato Cartório, Irá buscar na Consultoria</MudRadio>
                                 <MudRadio Option="@("2")" Color="Color.Primary">Contrato Cartório Enviar Correios</MudRadio>
                                 <MudRadio Option="@("3")" Color="Color.Primary">Contrato Digital</MudRadio>
@@ -329,24 +331,25 @@
     //Checkbox ---------------------------------------------------
     public string SelectedTipoConta{ get; set; }
 
-
     private void Reset()
     {
         SelectedTipoConta = null;
     }
 
 
-    public string SelectedTipoContrato { get; set; }
+    public string SelectedPrazoContrato { get; set; }
 
     private void Reset1()
     {
-        SelectedTipoContrato = null;
+        SelectedPrazoContrato = null;
     }
-    public string SelectedPraoContrato { get; set; }
+
+
+    public string SelectedTipoEntrega { get; set; }
 
     private void Reset2()
     {
-        SelectedPraoContrato = null;
+        SelectedTipoEntrega = null;
     }
     // upload de fotos
 
