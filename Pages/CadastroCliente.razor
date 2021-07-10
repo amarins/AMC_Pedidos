@@ -211,7 +211,7 @@
     [Parameter]
     public Ticket Ticket { get; set; }
 
-    public ClienteView clienteView { get; set; } = new ClienteView();
+    public Cliente clienteView { get; set; } = new Cliente();
 
     public bool ticketValido { get; set; } = true;
 
@@ -391,7 +391,7 @@
     public class TESTE
     {
         public string Ticket { get; set; }
-        public ClienteView Cliente { get; set; }
+        public Cliente Cliente { get; set; }
     }
 
 }

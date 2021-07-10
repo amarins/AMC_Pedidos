@@ -1,0 +1,40 @@
+﻿@inject IJSRuntime JSRuntime
+
+<MudTextField T="string" Variant=@variant id=@guid Label=@label Margin=@margin @bind-Value=@valor />
+
+@code {
+    Guid guid { get; set; }
+    [Parameter] public string label { get; set; }
+    [Parameter] public Variant variant { get; set; } = Variant.Outlined;
+
+    [Parameter] public string mascara { get; set; } //Mask
+
+    [Parameter] public Margin margin { get; set; } = Margin.Dense;
+
+    [Parameter] public EventCallback<string> valorChanged { get; set; }
+    private string _valor;
+
+    [Parameter]
+    public string valor
+    {
+        get => _valor;
+        set
+        {
+            if (_valor == value) return;
+            _valor = value;
+            valorChanged.InvokeAsync(value);
+        }
+    }
+    protected override void OnInitialized()
+    {
+        guid = Guid.NewGuid();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("mask", guid.ToString(), mascara);
+        }
+    }
+
+}

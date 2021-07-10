@@ -23,7 +23,7 @@ namespace BaseBlazorAdmin
 
             builder.Services.AddHttpClient("ApiName", client =>
             {
-                client.BaseAddress = new Uri("https://yourapi");
+                client.BaseAddress = new Uri("https://localhost:44312");
             }).AddHttpMessageHandler<AuthroizationMessageHandler>();
             builder.Services.AddTransient<AuthroizationMessageHandler>();
 

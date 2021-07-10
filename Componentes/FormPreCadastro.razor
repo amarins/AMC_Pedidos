@@ -1,11 +1,12 @@
 ﻿@using Newtonsoft.Json;
 @using BaseBlazorAdmin.Data;
+@using System.Text;
 @inject HttpClient http
-@inject IJSRuntime js
+@inject IJSRuntime JSRuntime
 
 <center>
     <div style="max-width:95%; align-content:center">
-        <EditForm Model="@clienteView" OnValidSubmit="@Salvar">
+        <EditForm Model="@clienteView" OnValidSubmit="@Salvar" OnInvalidSubmit="@Salvar">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -28,7 +29,8 @@
                     </MudGrid>
                     <MudGrid>
                         <MudItem xs="6">
-                            <MudTextField T="string" Label="Telefone" @bind-Value="clienteView.Telefone" Variant="Variant.Outlined" />
+                            @*<MudTextField T="string" Label="Telefone" @bind-Value="clienteView.Telefone" Variant="Variant.Outlined" />*@
+                            <MudTextMask mascara="(00) 00000-0000" margin="Margin.None" variant="Variant.Outlined" label="Telefone" @bind-valor="clienteView.Telefone" />
                         </MudItem>
                         <MudItem xs="6">
                             <MudTextField T="string" Label="E-Mail" @bind-Value="clienteView.email" Variant="Variant.Outlined" />
@@ -97,7 +99,7 @@
                         </MudItem>
                     </MudGrid>
                     <MudGrid>
-                        
+
                     </MudGrid>
                     <br />
                     <MudText Typo="Typo.h5" Align="Align.Left">Informações Bancárias</MudText>
@@ -150,7 +152,7 @@
                         <MudItem xs="8">
                             <MudText Align="Align.Center" GutterBottom="true">Tipo de Entrega de Contrato</MudText>
 
-                            <MudRadioGroup @bind-SelectedOption="@SelectedTipoEntrega"  @bind-value="@clienteView.TipoEntrega">
+                            <MudRadioGroup @bind-SelectedOption="@SelectedTipoEntrega" @bind-value="@clienteView.TipoEntrega">
                                 <MudRadio Option="@("1")" Color="Color.Primary"> Contrato Cartório, Irá buscar na Consultoria</MudRadio>
                                 <MudRadio Option="@("2")" Color="Color.Primary">Contrato Cartório Enviar Correios</MudRadio>
                                 <MudRadio Option="@("3")" Color="Color.Primary">Contrato Digital</MudRadio>
@@ -186,7 +188,7 @@
     [Parameter]
     public Ticket Ticket { get; set; }
 
-    public ClienteView clienteView { get; set; } = new ClienteView();
+    public Cliente clienteView { get; set; } = new Cliente();
 
     public bool ticketValido { get; set; } = true;
 
@@ -200,10 +202,52 @@
 
     private async Task Salvar()
     {
-        var url = "https://localhost:44312/api/cliente/PostIncluircomTicket";
+
+        var cli = new TESTE()
+        {
+            ticket = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            cliente = new Cliente()
+            {
+                id = 0,
+                Nome = "ale",
+                DT_Nasc = DateTime.Now,
+                CPF_CNPJ = "002",
+                RG = "0824",
+                RG_Orgao_Emissor = "ifp",
+                Profissao = "adm",
+                Nacionalidade = "brasil",
+                Estado_Civil = "casado",
+                Regime_de_Bens = "parcial",
+                Telefone = "22",
+                email = "marins",
+                Sexo = 1,
+                Endereco_CEP = "22894",
+                Endereco_Rua = "bernad",
+                Endereco_Numero = "203",
+                Endereco_Complemento = "301",
+                Endereco_Bairro = "boqueirao",
+                Endereco_Cidade = "spa",
+                Endereco_Estado = "rj",
+                CodBanco = "2",
+                CodAgencia = "2",
+                NumConta = "2",
+                TipoConta = 1,
+                NomeFavorecido = "Ale",
+                CPFFavorecido = "002",
+                ValorContrato = 10,
+                PrazoContrato = 24,
+                TipoEntrega = 1,
+                Tipo_Doc_Identificacao = 2,
+                Foto_Doc_Identificacao = "a",
+                idAcesso = 1,
+                idConsultor = 1,
+                Status = 2
+            }
+        };
+        var url = "/api/cliente/PostIncluircomTicket";
         var ClienteInput = new TESTE();
-        ClienteInput.Ticket = Ticket.id.ToString();
-        ClienteInput.Cliente = clienteView;
+        ClienteInput.ticket = Ticket.id.ToString();
+        ClienteInput.cliente = clienteView;
 
         var retorno = await http.PostAsJsonAsync(url, ClienteInput);
 
@@ -212,12 +256,12 @@
             var ret = await retorno.Content.ReadAsAsync<bool>();
             if (ret)
             { //Cadastro feito com successo
-                await js.InvokeVoidAsync("alert", "Funcionou bem!");
+                await JSRuntime.InvokeVoidAsync("alert", "Funcionou bem!");
             }
             else
             {
                 // Deu merda
-                await js.InvokeVoidAsync("alert", "Deu ruim!");
+                await JSRuntime.InvokeVoidAsync("alert", "Deu ruim!");
             }
         }
     }
@@ -329,7 +373,7 @@
     //FIM API Busca Bancos ------------------------------------------------------------------------
 
     //Checkbox ---------------------------------------------------
-    public string SelectedTipoConta{ get; set; }
+    public string SelectedTipoConta { get; set; }
 
     private void Reset()
     {
@@ -366,8 +410,8 @@
 
     public class TESTE
     {
-        public string Ticket { get; set; }
-        public ClienteView Cliente { get; set; }
+        public string ticket { get; set; }
+        public Cliente cliente { get; set; }
     }
 
 }
