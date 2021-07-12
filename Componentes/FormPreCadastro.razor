@@ -28,13 +28,20 @@
                         </MudItem>
                     </MudGrid>
                     <MudGrid>
-                        <MudItem xs="6">
-                            @*<MudTextField T="string" Label="Telefone" @bind-Value="clienteView.Telefone" Variant="Variant.Outlined" />*@
-                            <MudTextMask mascara="(00) 00000-0000" margin="Margin.None" variant="Variant.Outlined" label="Telefone" @bind-valor="clienteView.Telefone" />
+                        <MudItem xs="4">
+                            <MudTextField T="string" Label="Telefone" @bind-Value="clienteView.Telefone" Variant="Variant.Outlined" />
+                         @*   <MudTextMask mascara="(00) 00000-0000" margin="Margin.None" variant="Variant.Outlined" label="Telefone" @bind-valor="clienteView.Telefone" />*@
                         </MudItem>
-                        <MudItem xs="6">
+                        <MudItem xs="4">
                             <MudTextField T="string" Label="E-Mail" @bind-Value="clienteView.email" Variant="Variant.Outlined" />
                         </MudItem>
+                         <MudItem xs="4" >
+                            <MudAutocomplete T="string" Label="Sexo"  SearchFunc="@Searchsexo"
+                                             ResetValueOnEmptyText="@resetValueOnEmptySexo"
+                                             CoerceText="@ReceberTextSexo" CoerceValue="@ReceberValueSexo"
+                                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                        </MudItem>
+                         
                     </MudGrid>
                     <MudGrid>
                         <MudItem xs="4">
@@ -52,21 +59,21 @@
                             <MudTextField T="string" Label="Profissão" @bind-Value="clienteView.Profissao" Variant="Variant.Outlined" />
                         </MudItem>
                         <MudItem xs="12" sm="6" md="3">
-                            <MudAutocomplete T="string" Label="Nacionalidade" @bind-Value="clienteView.Nacionalidade" SearchFunc="@Search2"
-                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
-                                             CoerceText="@coerceText" CoerceValue="@coerceValue"
+                            <MudAutocomplete T="string" Label="Nacionalidade" @bind-Value="clienteView.Nacionalidade" SearchFunc="@SearchNacionalidade"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyNacionalidade"
+                                             CoerceText="@ReceberTextNacionalidade" CoerceValue="@ReceberValueNacionalidade"
                                              AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
                         </MudItem>
                         <MudItem xs="4" sm="6" md="3">
-                            <MudAutocomplete T="string" Label="Estado Civil" @bind-Value="clienteView.Estado_Civil" SearchFunc="@Search4"
-                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
-                                             CoerceText="@coerceText1" CoerceValue="@coerceValue1"
+                            <MudAutocomplete T="string" Label="Estado Civil" @bind-Value="clienteView.Estado_Civil" SearchFunc="@SearchEstadoCivil"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyEstadoCivil"
+                                             CoerceText="@ReceberTextEstadoCivil" CoerceValue="@ReceberValueEstadoCivil"
                                              AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
                         </MudItem>
                         <MudItem xs="4" sm="6" md="3">
-                            <MudAutocomplete T="string" Label="Regime de Bens" @bind-Value="clienteView.Regime_de_Bens" SearchFunc="@Search3"
-                                             ResetValueOnEmptyText="@resetValueOnEmptyText"
-                                             CoerceText="@coerceText2" CoerceValue="@coerceValue2"
+                            <MudAutocomplete T="string" Label="Regime de Bens" @bind-Value="clienteView.Regime_de_Bens" SearchFunc="@SearchRegimeBens"
+                                             ResetValueOnEmptyText="@resetValueOnEmptyRegimeBens"
+                                             CoerceText="@ReceberTextRegimeBens" CoerceValue="@ReceberValueRegimeBens"
                                              AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
                         </MudItem>
                     </MudGrid>
@@ -74,7 +81,7 @@
                     <MudText Typo="Typo.h5" Align="Align.Left">Endereço Residencial</MudText>
                     <MudGrid>
                         <MudItem xs="4">
-                            <MudTextField T="string" Variant="Variant.Outlined" @onmouseover="GetCepInformacoes" Label="CEP" @bind-Value="clienteView.Endereco_CEP" />
+                            <MudTextField T="string" Variant="Variant.Outlined" @onfocusout="GetCepInformacoes" Label="CEP" @bind-Value="clienteView.Endereco_CEP" />
                         </MudItem>
                         <MudItem xs="4">
                             <MudTextField T="string" Variant="Variant.Outlined" Label="Rua" @bind-Value="clienteView.Endereco_Rua" />
@@ -117,10 +124,11 @@
                         <MudItem xs="2">
                             <MudTextField T="string" Variant="Variant.Outlined" Label="Numero da Conta" @bind-Value="clienteView.NumConta" />
                         </MudItem>
-                        <MudRadioGroup @bind-SelectedOption="@SelectedTipoConta" @bind-value="@clienteView.TipoConta">
-                            <MudRadio Option="@("1")" Color="Color.Primary">Conta Corrente</MudRadio>
-                            <MudRadio Option="@("2")" Color="Color.Primary">Conta Poupança </MudRadio>
+                        <MudRadioGroup @bind-SelectedOption="@SelectedTipoConta" @bind-value="clienteView.TipoConta">
+                            <MudRadio Option="@("1")" value="1" Color="Color.Primary">Conta Corrente</MudRadio>
+                            <MudRadio Option="@("2")" value="2" Color="Color.Primary">Conta Poupança </MudRadio>
                         </MudRadioGroup>
+                        
                     </MudGrid>
 
                     <MudGrid>
@@ -131,7 +139,7 @@
                             <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="clienteView.CPFFavorecido" Label="CPF ou CNPJ do Favorecido da Conta" />
                         </MudItem>
                         <MudItem xs="4">
-                            <MudNumericField T="double" Variant="Variant.Outlined" @bind-Value="clienteView.ValorContrato" Label="Valor do Contrato" Adornment="Adornment.Start" AdornmentText="R$" AdornmentColor="Color.Success" HideSpinButtons="true" Format="##,#0.00" />
+                            <MudNumericField T="double" Variant="Variant.Outlined" @bind-Value="clienteView.ValorContrato" Label="Valor do Contrato" Adornment="Adornment.Start" AdornmentText="R$" AdornmentColor="Color.Success" HideSpinButtons="true" Format="#,###,###0.00" />
                         </MudItem>
 
                     </MudGrid>
@@ -267,10 +275,12 @@
     }
 
     //auto complite diversos---------------------------------------------
-    private bool resetValueOnEmptyText;
-    private bool coerceText;
-    private bool coerceValue;
-    private string value1, value2;
+
+    // Autocomplete Nacionalidade ------------------------
+    private bool resetValueOnEmptyNacionalidade;
+    private bool ReceberTextNacionalidade;
+    private bool ReceberValueNacionalidade;
+    private string valueNacionalidade, valueNacionalidade1;
 
     private string[] Nacionalidade =
     {"Brasil",
@@ -278,56 +288,87 @@
      "Estados Unidos"
     };
 
-    private bool coerceText1;
-    private bool coerceValue1;
-    private string value3, value4;
+     private async Task<IEnumerable<string>> SearchNacionalidade(string valueNacionalidade)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(valueNacionalidade))
+            return new string[0];
+        return Nacionalidade.Where(x => x.Contains(valueNacionalidade, StringComparison.InvariantCultureIgnoreCase));
+    }
+     // FIM Autocomplete Nacionalidade ------------------------
+
+    // Autocomplete Estado Civel ------------------------
+    private bool resetValueOnEmptyEstadoCivil;
+    private bool ReceberTextEstadoCivil;
+    private bool ReceberValueEstadoCivil;
+    private string valueEstadoCivil, valueEstadoCivil1;
+
     private string[] EstadoCivil =
     {"Solteiro",
      "Casado",
      "Viuvo",
      "Divorciado"
     };
+     private async Task<IEnumerable<string>> SearchEstadoCivil(string valueEstadoCivil)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
 
-    private bool coerceText2;
-    private bool coerceValue2;
-    private string value5, value6;
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(valueEstadoCivil))
+            return new string[0];
+        return EstadoCivil.Where(x => x.Contains(valueEstadoCivil, StringComparison.InvariantCultureIgnoreCase));
+    }
+    // FIM Autocomplete Estado Civil ------------------------
+
+    // Autocomplete Regime Bens ------------------------
+
+    private bool resetValueOnEmptyRegimeBens;
+    private bool ReceberTextRegimeBens;
+    private bool ReceberValueRegimeBens;
+    private string valueRegimeBens, valueRegimeBens1;
     private string[] RegimeBens =
     {"Comunhão total de Bens",
      "Comunhão Parcial de Bens",
      "Separação de Bens"
     };
-
-
-    private async Task<IEnumerable<string>> Search2(string value)
+     private async Task<IEnumerable<string>> SearchRegimeBens(string valueRegimeBens)
     {
         // In real life use an asynchronous function for fetching data from an api.
         await Task.Delay(5);
 
         // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrEmpty(valueRegimeBens))
             return new string[0];
-        return Nacionalidade.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        return RegimeBens.Where(x => x.Contains(valueRegimeBens, StringComparison.InvariantCultureIgnoreCase));
     }
-    private async Task<IEnumerable<string>> Search3(string value)
+    // FIM Autocomplete Regime Bens ------------------------
+
+    // Autocomplete Sexo ------------------------
+    private bool resetValueOnEmptySexo;
+    private bool ReceberTextSexo;
+    private bool ReceberValueSexo;
+    private string valueSexo, valueSexo1;
+    private string[] Sexo =
+    {"Masculino",
+     "Feminino",
+     "Outros"
+    };
+    
+      private async Task<IEnumerable<string>> Searchsexo(string valueSexo)
     {
-        // In real life use an asynchronous function for fetching data from an api.
-        await Task.Delay(5);
+       
 
         // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrEmpty(valueSexo))
             return new string[0];
-        return RegimeBens.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        return Sexo.Where(x => x.Contains(valueSexo, StringComparison.InvariantCultureIgnoreCase));
     }
-    private async Task<IEnumerable<string>> Search4(string value)
-    {
-        // In real life use an asynchronous function for fetching data from an api.
-        await Task.Delay(5);
 
-        // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
-            return new string[0];
-        return EstadoCivil.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    }
+    // FIM Autocomplete Sexo ------------------------
 
     // FIM auto complite diversos---------------------------------------------
 
@@ -374,6 +415,8 @@
 
     //Checkbox ---------------------------------------------------
     public string SelectedTipoConta { get; set; }
+    
+    
 
     private void Reset()
     {

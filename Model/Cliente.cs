@@ -12,11 +12,14 @@ namespace BaseBlazorAdmin.Model
 
         //Dados Pessoais
         [MaxLength(50)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu nome completo!")]
         public string Nome { get; set; }
 
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha a sua data de nascimento!")]
         public DateTime DT_Nasc { get; set; }
 
         [MaxLength(14)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu CPF ou CNPJ!")]
         public string CPF_CNPJ { get; set; }
 
         [MaxLength(14)]
@@ -26,57 +29,73 @@ namespace BaseBlazorAdmin.Model
         public string RG_Orgao_Emissor { get; set; }
 
         [MaxLength(40)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha a sua Profissão!")]
         public string Profissao { get; set; }
 
         [MaxLength(40)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha a sua Nacionalidade!")]
         public string Nacionalidade { get; set; }
 
         [MaxLength(40)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu Estado Civil!")]
         public string Estado_Civil { get; set; }
 
         [MaxLength(40)]
         public string Regime_de_Bens { get; set; }
 
         [MaxLength(15)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu Telefone!")]
         public string Telefone { get; set; }
 
         [MaxLength(50)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu Email!")]
         public string email { get; set; }
 
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu Sexo!")]
         public int Sexo { get; set; }
 
 
         //Dados endereços
         [MaxLength(9)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu CEP!")]
         public string Endereco_CEP { get; set; }
 
         [MaxLength(50)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha a sua Rua de sua Residência!")]
         public string Endereco_Rua { get; set; }
 
         [MaxLength(10)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o seu numero de sua Residência!")]
         public string Endereco_Numero { get; set; }
 
         [MaxLength(50)]
         public string Endereco_Complemento { get; set; }
 
         [MaxLength(50)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o Bairro de sua Residência!")]
         public string Endereco_Bairro { get; set; }
 
         [MaxLength(50)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha a Cidade de sua Residência!")]
         public string Endereco_Cidade { get; set; }
 
         [MaxLength(2)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha a Estado de sua Residência!")]
         public string Endereco_Estado { get; set; }
 
         [MaxLength(20)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o Codigo de Seu Banco!")]
         public string CodBanco { get; set; }
 
         [MaxLength(20)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o Codigo da Agencia de Seu Banco!")]
         public string CodAgencia { get; set; }
 
         [MaxLength(20)]
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o Numero de sua Conta!")]
         public string NumConta { get; set; }
 
+      
         public int TipoConta { get; set; }
 
         [MaxLength(50)]
@@ -86,12 +105,17 @@ namespace BaseBlazorAdmin.Model
         public string CPFFavorecido { get; set; }
 
         //Informaçoes de contrato
+
+        [Required(ErrorMessage = "Campo Obrigatório, Preencha o Valor Inicial do Contrato!")]
         public double ValorContrato { get; set; }
 
+        [Required(ErrorMessage = "Campo Obrigatório, Selecione o Prazo desejado!")]
         public int PrazoContrato { get; set; }
 
+        [Required(ErrorMessage = "Campo Obrigatório, Selecione a forma de Entrega de seu Contrato !")]
         public int TipoEntrega { get; set; }
 
+        [Required(ErrorMessage = "Campo Obrigatório, Selecio o tipo de documento que sera enviado!")]
         public int Tipo_Doc_Identificacao { get; set; }
 
         [MaxLength(50)]
@@ -103,111 +127,10 @@ namespace BaseBlazorAdmin.Model
         public int idConsultor { get; set; }
 
         public int Status { get; set; }
-        //public int id { get; set; }
-
-        ////Dados Pessoais
-        //[Required(ErrorMessage = "O campo nome é obrigatório!")]
-        //public string Nome { get; set; }
-
-        //public DateTime DT_Nasc { get; set; }
-
-        //[Required(ErrorMessage = "O campo é CPF_CNPJ obrigatório!")]
-        //public string CPF_CNPJ { get; set; }
-
-        //[Required(ErrorMessage = "O campo é RG obrigatório!")]
-        //public string RG { get; set; }
-
-        //[Required(ErrorMessage = "O campo é RG_Orgao_Emissor obrigatório!")]
-        //public string RG_Orgao_Emissor { get; set; }
-
-        //[Required(ErrorMessage = "O campo é Profissao obrigatório!")]
-        //public string Profissao { get; set; }
-
-        //[Required(ErrorMessage = "O campo é Nacionalidade obrigatório!")]
-        //public string Nacionalidade { get; set; }
-
-        //[Required(ErrorMessage = "O campo é Estado_Civil  obrigatório!")]
-        //public string Estado_Civil { get; set; }
-
-        //[Required(ErrorMessage = "O campo é Regime_de_Bensobrigatório!")]
-        //public string Regime_de_Bens { get; set; }
-
-        //[Required(ErrorMessage = "O campo éTelefone obrigatório!")]
-        //public string Telefone { get; set; }
-
-        //[Required(ErrorMessage = "O campo é email obrigatório!")]
-        //public string email { get; set; }
-
-        //public string Sexo { get; set; }
 
 
-        ////Dados endereços
+       
 
-        //[Required(ErrorMessage = "O campo é Endereco_CEP obrigatório!")]
-        //public string Endereco_CEP { get; set; }
-
-        //[Required(ErrorMessage = "O campo é Endereco_Rua obrigatório!")]
-        //public string Endereco_Rua { get; set; }
-
-        //[Required(ErrorMessage = "O campo é  Endereco_Numeroobrigatório!")]
-        //public string Endereco_Numero { get; set; }
-
-
-        //public string Endereco_Complemento { get; set; }
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public string Endereco_Bairro { get; set; }
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public string Endereco_Cidade { get; set; }
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public string Endereco_Estado { get; set; }
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public string CodBanco { get; set; }
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public string CodAgencia { get; set; }
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public string NumConta { get; set; }
-
-
-        //public int TipoConta { get; set; }
-
-
-        //public string NomeFavorecido { get; set; }
-
-
-        //public string CPFFavorecido { get; set; }
-
-
-        ////Informaçoes de contrato
-
-        //[Required(ErrorMessage = "O campo é obrigatório!")]
-        //public double ValorContrato { get; set; }
-
-
-
-        //public int PrazoContrato { get; set; }
-
-
-        //public int TipoEntrega { get; set; }
-
-
-        //public int Tipo_Doc_Identificacao { get; set; }
-
-
-        //public string Foto_Doc_Identificacao { get; set; }
-
-
-        ////Dados diversos
-
-        //public int idAcesso { get; set; }
-
-        //public int idConsultor { get; set; }
-
-        //public int Status { get; set; }
+      
     }
 }
